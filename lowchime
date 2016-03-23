@@ -1,0 +1,64 @@
+#!/bin/bash
+
+readonly program="$(basename "${0}")"
+readonly scripts_dir='/Library/LowChimeHelpers'
+readonly save_settings_script='/Library/LowChimeHelpers/save_settings.sh'
+readonly restore_settings_script='/Library/LowChimeHelpers/restore_settings.sh'
+
+function usage {
+  echo "usage: sudo ${program} <install|uninstall|help>"
+}
+
+if [[ "$(id -u)" -ne 0 ]]; then
+  echo -e "$(tput setaf 1)This script needs to be ran with administrative privileges.$(tput sgr0)"
+  usage
+  exit 1
+fi
+
+if [[ "${1}" == 'uninstall' ]]; then
+  rm -r "${scripts_dir}"
+  defaults delete com.apple.loginwindow LoginHook
+  defaults delete com.apple.loginwindow LogoutHook
+
+  echo -e "\n$(tput setaf 3)Scripts were uninstalled. For a complete removal you should also delete the ~/.config/lowchime file for each user, though leaving it does no harm.$(tput sgr0)\n"
+
+  exit 0
+elif [[ "${1}" == 'install' ]]; then
+  mkdir -p "${scripts_dir}"
+
+  echo '#!/bin/bash
+    settings_dir="/Users/${1}/.config" # In login/logout scripts, $1 returns the short name of the user who is logging in
+    settings_file="${settings_dir}/lowchime"
+    desired_chime_volume="10"
+    current_volume="$(osascript -e "output volume of (get volume settings)")"
+    current_mute="$(osascript -e "get output muted of (get volume settings)")"
+
+    mkdir -p "${settings_dir}"
+
+    volume_state="output volume ${current_volume}"
+    [[ "${current_mute}" == "false" ]] && mute_state="without output muted" || mute_state="with output muted"
+
+    echo "${volume_state} ${mute_state}" > "${settings_file}"
+    osascript -e "set volume output volume ${desired_chime_volume} without output muted"
+  ' | sed -E 's/^ {4}//' > "${save_settings_script}"
+
+  echo '#!/bin/bash
+    settings_dir="/Users/${1}/.config" # In login/logout scripts, $1 returns the short name of the user who is logging in
+    settings_file="${settings_dir}/lowchime"
+    [[ -f "${settings_file}" ]] && osascript -e "set volume $(< "${settings_file}")"
+  ' | sed -E 's/^ {4}//' > "${restore_settings_script}"
+
+  chmod +x "${save_settings_script}" "${restore_settings_script}"
+  defaults write com.apple.loginwindow LoginHook "${restore_settings_script}"
+  defaults write com.apple.loginwindow LogoutHook "${save_settings_script}"
+
+  echo "$(tput setaf 2)Scripts were successfully installed.$(tput sgr0)"
+
+  exit 0
+elif [[ "${1}" == 'help' ]]; then
+  usage
+  exit 0
+else
+  usage
+  exit 1
+fi
