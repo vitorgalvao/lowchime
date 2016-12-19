@@ -1,5 +1,5 @@
 # lowchime
-Lower the volume of OS X’s startup chime, without completely turning it off.
+Lower the volume of macOS’s startup chime, without completely turning it off.
 
 ## Install
 ```bash
@@ -10,7 +10,7 @@ The script will ask for your administrator password to be able to perform its ta
 
 ## Why
 
-The volume of OS X’s [startup chime](https://youtu.be/i9qOJqNjalE) is dependent on the volume level you left it on when turning off your Mac. This is irritating in many situations, as when you want to turn on your computer at night when there are people near you sleeping and it blasts at full volume.
+The volume of macOS’s [startup chime](https://youtu.be/i9qOJqNjalE) is dependent on the volume level you left it on when turning off your Mac. This is irritating in many situations, as when you want to turn on your computer at night when there are people near you sleeping and it blasts at full volume.
 
 There are many workarounds posted online, like plugging headphones before turning on your Mac (works, but can be inconvenient) or running some terminal commands (with variable results) to turn off the sound.
 
