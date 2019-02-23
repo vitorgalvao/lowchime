@@ -6,7 +6,7 @@ readonly save_settings_script='/Library/LowChimeHelpers/save_settings.sh'
 readonly restore_settings_script='/Library/LowChimeHelpers/restore_settings.sh'
 
 function usage {
-  echo "usage: sudo ${program} <install|uninstall|help>"
+  echo "Usage: sudo ${program} <install|uninstall|help>"
 }
 
 if [[ "$(id -u)" -ne 0 ]]; then
