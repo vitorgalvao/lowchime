@@ -8,7 +8,10 @@ Lower the volume of macOS’s startup chime, without completely turning it off.
 
 ## Install
 ```bash
-(curl -fsSLo '/tmp/lowchime' 'https://raw.githubusercontent.com/vitorgalvao/lowchime/master/lowchime' && chmod +x '/tmp/lowchime' && sudo /tmp/lowchime install)
+# Download the setup script
+curl --silent 'https://raw.githubusercontent.com/vitorgalvao/lowchime/master/lowchime' --output '/tmp/lowchime' && chmod +x '/tmp/lowchime'
+# Run it
+sudo /tmp/lowchime install
 ```
 
 The script will ask for your administrator password to be able to perform its tasks.
